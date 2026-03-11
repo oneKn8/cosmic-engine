@@ -8,6 +8,16 @@ Pick a mood. Press play. Listen forever.
 
 <br/>
 
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-A855F7?style=for-the-badge)
+
+<br/>
+
 <img src="assets/demo.gif" alt="Cosmic Engine cycling through moods -- Cosmic, Night Drive, Euphoria, Rain" width="720"/>
 
 <br/>
