@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright testing artifacts
+.playwright-mcp/
+*.png
+
+# Training data and checkpoints (large files)
+training/data/raw/
+training/data/processed/
+training/checkpoints/
+
+# Exported model weights (large files)
+backend/exported/
