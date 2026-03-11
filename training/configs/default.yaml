@@ -1,0 +1,43 @@
+# ============================================================================
+# MIDI Transformer Training Configuration
+# ============================================================================
+
+# --- Data ---
+data_dir: "./data/midi"
+processed_dir: "./data/processed"
+tokenizer_path: "./data/tokenizer.json"
+max_seq_len: 1024
+val_split: 0.05
+
+# --- Model ---
+vocab_size: 0  # auto-set from tokenizer at runtime
+d_model: 512
+n_heads: 8
+n_layers: 8
+d_ff: 2048
+dropout: 0.1
+
+# --- Training ---
+batch_size: 16
+learning_rate: 3.0e-4
+weight_decay: 0.1
+warmup_steps: 1000
+max_steps: 100000
+grad_clip: 1.0
+save_every: 5000
+eval_every: 1000
+log_every: 100
+checkpoint_dir: "./checkpoints"
+seed: 42
+
+# --- Mood Conditioning ---
+use_mood_conditioning: true
+mood_categories:
+  - cosmic
+  - melancholic
+  - night_drive
+  - dream
+  - tension
+  - euphoria
+  - rain
+  - horizon
