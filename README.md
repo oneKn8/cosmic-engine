@@ -1,60 +1,196 @@
+<div align="center">
+
 # Cosmic Engine
 
-**Infinite AI music that never repeats. Pick a mood. Press play. Listen forever.**
+### Infinite music from a neural network that learned to feel.
 
-Cosmic Engine is a real-time AI music generator that runs in your browser. A custom-trained 35M-parameter transformer model generates MIDI token sequences conditioned on mood, synthesizes them to audio with FluidSynth, and streams the result over WebSocket -- producing an endless, evolving soundtrack that responds to how you want to feel.
+Pick a mood. Press play. Listen forever.
 
-This is not procedural generation with random notes. This is a neural network that learned music from 178,000 MIDI files and generates coherent, mood-appropriate compositions from scratch, one token at a time.
+<br/>
 
----
+<img src="assets/demo.gif" alt="Cosmic Engine cycling through moods -- Cosmic, Night Drive, Euphoria, Rain" width="720"/>
 
-## How It Works
+<br/>
+<br/>
 
-```
-Mood Selection --> MIDI Token Generation --> FluidSynth Synthesis --> WebSocket Stream --> Web Audio API
-```
+A 35-million-parameter transformer trained on 178,000 songs generates MIDI sequences conditioned on emotion, synthesizes them through FluidSynth, and streams the result to your browser in real time. No loops. No samples. No two listens are the same.
 
-1. **You pick a mood.** Eight distinct emotional presets, each with tuned generation parameters -- temperature, guidance scale, BPM, and harmonic frequency profiles.
-
-2. **The transformer generates MIDI tokens.** A GPT-2-style causal model with Rotary Positional Embeddings (RoPE) and mood conditioning autoregressively generates REMI-tokenized MIDI sequences. Top-k/top-p nucleus sampling with per-mood temperature controls the creative range.
-
-3. **FluidSynth renders audio.** Raw MIDI token sequences are decoded back to MIDI events and synthesized to 32kHz audio using FluidSynth with GM soundfonts. Convolution reverb, normalization, and fade curves are applied.
-
-4. **Adaptive streaming delivers it.** The backend measures generation speed and dynamically adjusts segment duration (3--15 seconds) to stay ahead of playback. Segments are crossfaded with a raised-cosine window and streamed as WAV chunks over WebSocket. A pre-generation buffer prefetches the next segment while the current one plays.
-
-5. **Gapless playback in the browser.** The Web Audio API schedules buffers with sample-accurate timing for seamless transitions. A real-time frequency visualizer renders the audio. No gaps. No clicks. No interruptions.
+</div>
 
 ---
 
-## Features
+## What this actually is
 
-- **8 mood presets** -- Cosmic, Melancholic, Night Drive, Dream, Tension, Euphoria, Rain, Horizon -- each with distinct harmonic profiles, BPM, and generation parameters
-- **4 engine backends** -- swap between mock (development), MusicGen (local GPU), Replicate (cloud API), and MIDI Transformer (production) with a single environment variable
-- **Adaptive segment generation** -- backend self-tunes segment duration based on generation throughput to prevent buffer underruns
-- **Raised-cosine crossfade** -- smooth transitions between generated segments with configurable overlap
-- **Pre-generation buffer** -- next segment generates while the current one plays
-- **Real-time audio visualization** -- frequency spectrum analyzer driven by Web Audio API
-- **Save and record** -- bookmark clips instantly or record full sessions; audio stored locally in IndexedDB
-- **Library panel** -- browse, replay, and manage saved recordings
-- **Seed control** -- lock a generation seed to reproduce a specific musical passage
-- **Fullscreen immersive mode** -- distraction-free listening with visualization
-- **Keyboard-driven** -- full shortcut support for hands-free control
-- **Dark UI** -- designed for ambient listening, not productivity software
+This is not a playlist. It is not procedural generation with random notes stitched together.
+
+Cosmic Engine is a neural network that internalized the structure of music -- harmony, rhythm, tension, resolution -- from 178,000 MIDI files. When you select a mood, the model generates original compositions token by token, each informed by every token that came before it. The output is coherent, evolving, and endless.
+
+You open a browser tab. You pick how you want to feel. The music begins and never stops.
+
+---
+
+## The signal path
+
+```
+Mood --> Transformer --> MIDI tokens --> FluidSynth --> WebSocket --> Your ears
+```
+
+1. **You choose an emotion.** Eight moods, each with its own temperature, guidance scale, BPM range, and harmonic profile. These aren't labels -- they are parameter regimes that shape what the model creates.
+
+2. **The transformer writes music.** A GPT-2-style causal model with Rotary Positional Embeddings and mood conditioning autoregressively generates REMI-tokenized MIDI. Nucleus sampling with per-mood temperature controls the boundary between coherence and surprise.
+
+3. **FluidSynth gives it a voice.** Raw token sequences decode back to MIDI events and render to 32kHz audio through General MIDI soundfonts. Convolution reverb adds space. Normalization and fade curves smooth the edges.
+
+4. **Adaptive streaming keeps it seamless.** The backend measures its own generation speed and self-tunes segment duration (3--15 seconds) to stay ahead of playback. A pre-generation buffer works on the next segment while the current one plays. Segments overlap with a raised-cosine crossfade.
+
+5. **Gapless playback in the browser.** Web Audio API schedules buffers with sample-accurate timing. A real-time frequency visualizer renders what you hear. No gaps. No clicks. No silence between thoughts.
 
 ---
 
 ## Moods
 
-| Mood | BPM | Character |
-|------|-----|-----------|
-| Cosmic | 85 | Deep space ambient with evolving synthesizer pads |
-| Melancholic | 70 | Emotional piano with cinematic ambient pads |
-| Night Drive | 100 | Synthwave with driving bass and neon arpeggios |
-| Dream | 78 | Shoegaze-ambient with floating guitar textures |
-| Tension | 90 | Dark cinematic suspense with building strings |
-| Euphoria | 128 | Uplifting trance with ascending bright melodies |
-| Rain | 75 | Lo-fi ambient piano with warm rain atmosphere |
-| Horizon | 95 | Post-rock crescendo with delayed guitars building to climax |
+Each mood is a distinct emotional space with its own generation parameters.
+
+| | Mood | BPM | Sound |
+|-|------|-----|-------|
+| | **Cosmic** | 85 | Deep space ambient -- evolving synthesizer pads drifting through void |
+| | **Melancholic** | 70 | Emotional piano layered with cinematic ambient pads |
+| | **Night Drive** | 100 | Synthwave -- driving bass and neon arpeggios on empty highways |
+| | **Dream** | 78 | Shoegaze-ambient -- floating guitar textures dissolving into reverb |
+| | **Tension** | 90 | Dark cinematic suspense -- strings building toward something |
+| | **Euphoria** | 128 | Uplifting trance -- ascending bright melodies breaking through |
+| | **Rain** | 75 | Lo-fi ambient piano -- warm and unhurried, like watching weather |
+| | **Horizon** | 95 | Post-rock crescendo -- delayed guitars building to catharsis |
+
+---
+
+## Features
+
+- **Endless generation** -- music that evolves and never loops back
+- **8 mood presets** with distinct harmonic profiles, BPM, and generation parameters
+- **4 swappable engines** -- mock (dev), MusicGen (local GPU), Replicate (cloud), MIDI Transformer (production)
+- **Adaptive streaming** -- backend self-tunes segment length to prevent buffer underruns
+- **Raised-cosine crossfade** -- smooth transitions between segments
+- **Pre-generation buffer** -- next segment generates while the current one plays
+- **Real-time visualizer** -- frequency spectrum analyzer that breathes with the music
+- **Save and record** -- bookmark a moment or record a full session, stored in IndexedDB
+- **Library panel** -- browse, replay, and manage everything you've saved
+- **Seed control** -- lock a generation seed to reproduce a passage you loved
+- **Immersive fullscreen** -- just the visualizer and the sound
+- **Keyboard-driven** -- full shortcut support, hands never leave the keys
+- **Dark by default** -- designed for ambient listening at 2am, not productivity dashboards
+
+---
+
+## The model
+
+The MIDI Transformer is a GPT-2-style causal language model purpose-built for music.
+
+| | |
+|---|---|
+| **Parameters** | ~35M |
+| **Architecture** | 8 layers, 8 heads, 512 embedding dim, 2048 FFN |
+| **Positional encoding** | Rotary (RoPE) |
+| **Sequence length** | 1024 tokens |
+| **Tokenization** | REMI (relative MIDI encoding) |
+| **Mood conditioning** | Learned embedding added to token embeddings |
+| **Sampling** | Top-k + nucleus (top-p) with per-mood temperature |
+| **Training data** | Lakh MIDI Dataset (~178K files) |
+| **Optimizer** | AdamW, cosine schedule, 1000-step warmup |
+| **Attention** | PyTorch SDPA (FlashAttention when available) |
+| **Weight tying** | Token embedding tied to LM head |
+
+---
+
+## Quick start
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 18+
+- FluidSynth + GM soundfont (for the MIDI Transformer engine)
+
+```bash
+# Ubuntu/Debian
+sudo apt install fluidsynth fluid-soundfont-gm
+```
+
+### Backend
+
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# Mock engine -- no GPU, instant start, great for development
+ENGINE_TYPE=mock python -m uvicorn app.main:app --host 0.0.0.0 --port 8888
+
+# Or the real thing -- MIDI Transformer with a trained model
+ENGINE_TYPE=midi_transformer MIDI_MODEL_DIR=./exported python -m uvicorn app.main:app --host 0.0.0.0 --port 8888
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install && npm run dev
+```
+
+Open `http://localhost:5173`. Pick a mood. Press play. Disappear.
+
+### Environment
+
+| Variable | Default | What it does |
+|----------|---------|--------------|
+| `ENGINE_TYPE` | `mock` | `mock`, `musicgen`, `replicate`, `midi_transformer` |
+| `MIDI_MODEL_DIR` | `./exported` | Path to exported model weights |
+| `SOUNDFONT_PATH` | `/usr/share/sounds/sf2/FluidR3_GM.sf2` | FluidSynth soundfont |
+| `SAMPLE_RATE` | `32000` | Audio sample rate (Hz) |
+| `SEGMENT_DURATION` | `15.0` | Base segment length (seconds) |
+| `CROSSFADE_DURATION` | `2.0` | Overlap between segments (seconds) |
+| `PORT` | `8888` | Backend port |
+| `DEVICE` | `auto` | PyTorch device: `auto`, `cpu`, `cuda` |
+| `MODEL_NAME` | `facebook/musicgen-small` | HuggingFace model (MusicGen engine) |
+| `REPLICATE_API_TOKEN` | -- | API key (Replicate engine only) |
+
+---
+
+## Keyboard shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Space` | Play / Pause / Resume |
+| `Escape` | Stop |
+| `1`--`8` | Jump to mood |
+| `M` | Mute / Unmute |
+| `Up` / `Down` | Volume |
+| `F` | Fullscreen |
+| `S` | Save clip |
+| `R` | Record / Stop recording |
+| `L` | Library |
+| `?` | Help |
+
+---
+
+## Train your own
+
+The full pipeline is included. You need a GPU with 16GB+ VRAM.
+
+```bash
+cd training
+pip install -r requirements.txt
+
+# Download and tokenize Lakh MIDI (~178K files)
+python scripts/prepare_data.py
+
+# Train (~35-40 hours on A4000)
+python train.py
+
+# Export for inference
+python export_model.py --checkpoint checkpoints/best.pt --output ../backend/exported/
+```
+
+Training config lives in `training/configs/`. Defaults: batch size 16, lr 3e-4, cosine schedule, 1000-step warmup, checkpoints every 5K steps.
 
 ---
 
@@ -64,13 +200,17 @@ Mood Selection --> MIDI Token Generation --> FluidSynth Synthesis --> WebSocket 
 frontend/                    React + Vite + TypeScript
   src/
     hooks/
-      useKeyboardShortcuts   Keyboard shortcut handler
+      useAudioStream          WebSocket client + Web Audio playback
+      useKeyboardShortcuts    Keyboard handler
       useAudioRecorder        Rolling buffer save/record system
       useLibrary              IndexedDB storage layer
     components/
+      Visualizer              Real-time frequency spectrum
       Transport               Playback controls, seed lock, status
+      MoodSelector            Mood grid with live indicators
       SaveControls            Bookmark, record, library toggle
       Library                 Slide-out saved recordings panel
+      ParticleBackground      Mood-reactive particle system
 
 backend/                     FastAPI + Python
   app/
@@ -80,151 +220,26 @@ backend/                     FastAPI + Python
       mock.py                Sine-wave test engine
       musicgen.py            Meta MusicGen (local GPU inference)
       replicate.py           Replicate API client
-      midi_transformer.py    Production engine: MIDI generation + FluidSynth
+      midi_transformer.py    MIDI generation + FluidSynth synthesis
 
 training/                    Full training pipeline
   model.py                   35M-param transformer (RoPE, mood conditioning)
   train.py                   Training loop (AdamW, cosine LR, gradient clipping)
   export_model.py            Export state dict + config + optional ONNX
-  scripts/                   GPU setup, data download, run automation
-  data/                      Lakh MIDI dataset processing
+  scripts/                   GPU setup, data download, automation
 ```
 
 ---
 
-## The Model
-
-The MIDI Transformer is a GPT-2-style causal language model purpose-built for music generation.
-
-| Parameter | Value |
-|-----------|-------|
-| Parameters | ~35M |
-| Embedding dim | 512 |
-| Attention heads | 8 |
-| Transformer layers | 8 |
-| FFN dim | 2048 |
-| Max sequence length | 1024 tokens |
-| Positional encoding | Rotary (RoPE) |
-| Activation | GELU |
-| Normalization | Pre-norm (LayerNorm) |
-| Attention | PyTorch SDPA (FlashAttention when available) |
-| Weight tying | Token embedding tied to LM head |
-| Tokenization | REMI (relative MIDI encoding) |
-| Mood conditioning | Learned embedding added to token embeddings |
-| Sampling | Top-k + nucleus (top-p) with temperature |
-| Training data | Lakh MIDI Dataset (~178K files) |
-| Optimizer | AdamW, cosine schedule, 1000-step warmup |
-
----
-
-## Quick Start
-
-### Prerequisites
-
-- Python 3.10+
-- Node.js 18+
-- FluidSynth and a GM soundfont (for MIDI Transformer engine)
-
-```bash
-# Install FluidSynth (Ubuntu/Debian)
-sudo apt install fluidsynth fluid-soundfont-gm
-```
-
-### Backend
-
-```bash
-cd backend
-
-# Create virtualenv and install dependencies
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# Start with mock engine (no GPU needed)
-ENGINE_TYPE=mock python -m uvicorn app.main:app --host 0.0.0.0 --port 8888
-
-# Or with the trained MIDI Transformer model
-ENGINE_TYPE=midi_transformer MIDI_MODEL_DIR=./exported python -m uvicorn app.main:app --host 0.0.0.0 --port 8888
-```
-
-### Frontend
-
-```bash
-cd frontend
-
-npm install
-npm run dev
-```
-
-Open `http://localhost:5173` in your browser. Pick a mood. Press play.
-
-### Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `ENGINE_TYPE` | `mock` | Engine backend: `mock`, `musicgen`, `replicate`, `midi_transformer` |
-| `MODEL_NAME` | `facebook/musicgen-small` | HuggingFace model ID (MusicGen engine) |
-| `DEVICE` | `auto` | PyTorch device: `auto`, `cpu`, `cuda` |
-| `SAMPLE_RATE` | `32000` | Audio sample rate in Hz |
-| `MIDI_MODEL_DIR` | `./exported` | Path to exported MIDI Transformer weights |
-| `SOUNDFONT_PATH` | `/usr/share/sounds/sf2/FluidR3_GM.sf2` | FluidSynth soundfont file |
-| `REPLICATE_API_TOKEN` | -- | Replicate API key (Replicate engine only) |
-| `SEGMENT_DURATION` | `15.0` | Base segment duration in seconds |
-| `CROSSFADE_DURATION` | `2.0` | Crossfade overlap in seconds |
-| `PORT` | `8888` | Backend server port |
-
----
-
-## Keyboard Shortcuts
-
-| Key | Action |
-|-----|--------|
-| `Space` | Play / Pause / Resume |
-| `Escape` | Stop |
-| `1`--`8` | Select mood |
-| `M` | Toggle mute |
-| `Up` / `Down` | Volume up / down |
-| `F` | Toggle fullscreen |
-| `S` | Save current clip |
-| `R` | Toggle recording |
-| `L` | Toggle library panel |
-| `?` | Toggle help overlay |
-
----
-
-## Training Your Own Model
-
-The full training pipeline is included. You need a GPU with at least 16GB VRAM.
-
-```bash
-cd training
-
-# Install training dependencies
-pip install -r requirements.txt
-
-# Prepare the Lakh MIDI dataset (downloads + tokenizes ~178K files)
-python scripts/prepare_data.py
-
-# Train (100K steps, ~35-40 hours on A4000)
-python train.py
-
-# Export for inference
-python export_model.py --checkpoint checkpoints/best.pt --output ../backend/exported/
-```
-
-Training configuration lives in `training/configs/`. The default config trains with batch size 16, learning rate 3e-4, cosine schedule with 1000-step warmup, and saves checkpoints every 5000 steps.
-
----
-
-## Tech Stack
+## Stack
 
 **Frontend:** React, Vite, TypeScript, Web Audio API, IndexedDB
 
-**Backend:** FastAPI, Python, WebSocket, FluidSynth, NumPy/SciPy
+**Backend:** FastAPI, WebSocket, FluidSynth, NumPy/SciPy
 
 **Model:** PyTorch, custom GPT-2 architecture, REMI tokenization
 
-**Infrastructure:** Runs on CPU (mock/MIDI Transformer) or GPU (MusicGen). Cloud option via Replicate API.
+**Runs on:** CPU (mock / MIDI Transformer) or GPU (MusicGen). Cloud option via Replicate.
 
 ---
 
